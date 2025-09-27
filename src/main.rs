@@ -16,22 +16,17 @@ fn main(){
 	let y=Unvec(&graph).forward(x);													// apply the graph network by reference to x. AI trait contains the forward method, and is implemented for references too. Since graph can either take a hashmap or vector of inputs, letting it directly have single inputs caused type issues, so Unvec is a convenience wrapper for putting the input in a vec and taking the output out of the vec
 	println!("{}",y.unwrap_f1());
 }
-use block_graph::{																	// imports from block-graph
-	AI,Graph,Unvec,burn::{Layer,Value}
-};															// imports from burn
+impl MNIST{
+	/// loads the mnist dataset
+	pub fn load_training_data()->Self{
+		Self{inner:MnistDataset::train()}
+	}
+	/// loads the mnist dataset
+	pub fn load_validation_data()->Self{
+		Self{inner:MnistDataset::test()}
 
-use burn::{
-	backend::NdArray, data::dataset::{
-		Dataset, vision::MnistDataset
-	},
-
-	prelude::Backend
-};
-
-struct MNIST{
-	inner:MnistDataset
+	}
 }
-
 impl<B:Backend> Dataset < (Value<B>, Value<B>) > for MNIST { // (image, label)
 	fn get(&self, index:usize) -> Option <  (Value<B>, Value<B>) > {
 		let data = self.inner.get(index)?;
@@ -42,7 +37,7 @@ impl<B:Backend> Dataset < (Value<B>, Value<B>) > for MNIST { // (image, label)
 		let target = Value::from(label);
 
 		let input = input.reshape([28,28]);
-		
+
 		Some((input, target))
 	}
 
@@ -50,3 +45,10 @@ impl<B:Backend> Dataset < (Value<B>, Value<B>) > for MNIST { // (image, label)
 		return self.inner.len()
 	}
 }
+struct MNIST{inner:MnistDataset}
+use block_graph::{																	// imports from block-graph
+	AI,Graph,Unvec,burn::{Layer,Value}
+};
+use burn::{
+	backend::NdArray,data::dataset::{Dataset,vision::MnistDataset},prelude::Backend
+};															// imports from burn
