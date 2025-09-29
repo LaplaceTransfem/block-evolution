@@ -1,4 +1,4 @@
-// example to help get started
+// example to help get startedddd
 fn main(){
 	let mut graph:Graph<Layer<NdArray>>=Graph::new();								// create mutable variable storing a new graph of Layer with the NdArray backend. We can use Wgpu later for GPU acceleration, but that's a bit overkill for this example
 	let x:Vec<f32>=(0..28*28).map(|n|(n%10) as f32*0.1).collect::<Vec<_>>();			// this is just some vector of 100 floats. It didn't have to be these floats specifically but it is
